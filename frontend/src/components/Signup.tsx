@@ -1,8 +1,36 @@
-import React from 'react'
-import { Form, Button, Card } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import React, { useRef, useState } from "react";
+import { Form, Button, Card } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Signup() {
+  const emailRef = useRef<HTMLInputElement>();
+  const passwordRef = useRef<HTMLInputElement>();
+  const passwordConfirmRef = useRef<HTMLInputElement>();
+  const { signup } = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const history = useNavigate();
+
+  async function handleSubmit(e: any) {
+    e.preventDefault();
+
+    if (passwordRef.current!.value !== passwordConfirmRef.current!.value) {
+      return setError("Passwords do not match");
+    }
+
+    try {
+      setError("");
+      setLoading(true);
+      await signup(emailRef.current!.value, passwordRef.current!.value);
+      history("/");
+    } catch {
+      setError("Failed to create an account");
+    }
+
+    setLoading(false);
+  }
+
   return (
     <div>
       <Card>
@@ -10,24 +38,6 @@ function Signup() {
           <h2 className="text-center mb-4">Sign Up</h2>
 
           <Form>
-            <Form.Group id="fName">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control type="text" required />
-            </Form.Group>
-            <Form.Group id="lName">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control type="text" required />
-            </Form.Group>
-            <Form.Group id="country">
-              <Form.Label>Country</Form.Label>
-              <Form.Select required>
-                <option value="0">Select Country</option>
-                <option value="1">Denmark</option>
-                <option value="1">Norway</option>
-                <option value="1">Sweden</option>
-                <option value="1">Finland</option>
-              </Form.Select>
-            </Form.Group>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" required />
@@ -50,7 +60,7 @@ function Signup() {
         Already have an account? <Link to="/login">Login</Link>
       </div>
     </div>
-  )
+  );
 }
 
-export default Signup
+export default Signup;

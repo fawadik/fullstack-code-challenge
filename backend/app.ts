@@ -1,10 +1,10 @@
 import express from 'express'
 import lusca from 'lusca'
 import dotenv from 'dotenv'
-import apiErrorHandler from './middlewares/apiErrorHandler'
-import apiContentType from './middlewares/apiContentType'
+import apiErrorHandler from './src/middlewares/apiErrorHandler'
+import apiContentType from './src/middlewares/apiContentType'
 import compression from 'compression'
-import userRouter from './routers/user'
+import userRouter from './src/routers/user'
 
 dotenv.config({ path: '.env' })
 const app = express()

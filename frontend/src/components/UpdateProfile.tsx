@@ -1,6 +1,6 @@
-import React from 'react'
-import { Form, Button, Card } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Form, Button, Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 function UpdateProfile() {
   return (
@@ -56,7 +56,7 @@ function UpdateProfile() {
         <Link to="/login">Cancel</Link>
       </div>
     </div>
-  )
+  );
 }
 
-export default UpdateProfile
+export default UpdateProfile;

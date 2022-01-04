@@ -1,8 +1,31 @@
-import React from 'react'
-import { Form, Button, Card } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import React, { useRef, useState } from "react";
+import { Form, Button, Card } from "react-bootstrap";
+import { useAuth } from "../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
+  const emailRef = useRef<HTMLInputElement>();
+  const passwordRef = useRef<HTMLInputElement>();
+  const { login } = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const history = useNavigate();
+
+  async function handleSubmit(e: any) {
+    e.preventDefault();
+
+    try {
+      setError("");
+      setLoading(true);
+      await login(emailRef.current!.value, passwordRef.current!.value);
+      history("/");
+    } catch {
+      setError("Failed to log in");
+    }
+
+    setLoading(false);
+  }
+
   return (
     <div>
       <Card>
@@ -32,7 +55,7 @@ function Login() {
         <Link to="/resetpassword">Forgot Password</Link>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;
