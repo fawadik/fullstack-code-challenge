@@ -1,8 +1,7 @@
-import React, { useContext, useState, useEffect, FC } from "react";
-import firebase from "firebase/app";
+import React, { useContext, useState, useEffect } from "react";
 import { auth } from "../firebase";
 
-const AuthContext = React.createContext(null);
+const AuthContext = React.createContext({} as any);
 
 type childrenProps = {
   children: JSX.Element | JSX.Element[];
@@ -17,6 +16,7 @@ export function AuthProvider({ children }: childrenProps) {
   const [loading, setLoading] = useState(true);
 
   function signup(email: string, password: string) {
+    console.log("signup function called");
     return auth.createUserWithEmailAndPassword(email, password);
   }
 

@@ -4,8 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
-  const emailRef = useRef<HTMLInputElement>();
-  const passwordRef = useRef<HTMLInputElement>();
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
   const { login } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,8 +17,8 @@ function Login() {
     try {
       setError("");
       setLoading(true);
-      await login(emailRef.current!.value, passwordRef.current!.value);
-      history("/");
+      await login(emailRef.current?.value, passwordRef.current?.value);
+      history("/profile");
     } catch {
       setError("Failed to log in");
     }
@@ -32,14 +32,14 @@ function Login() {
         <Card.Body>
           <h2 className="text-center mb-4">Login</h2>
 
-          <Form>
+          <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" required />
+              <Form.Control type="email" ref={emailRef} required />
             </Form.Group>
             <Form.Group id="password">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" required />
+              <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
 
             <Button className="w-100 mt-4" type="submit">

@@ -1,28 +1,16 @@
 import User, { UserDocument } from '../models/User'
 import { NotFoundError } from '../helpers/apiError'
 
-const create = async (user: UserDocument): Promise<UserDocument> => {
-  return user.save()
-}
-
-const findUserById = async (userId: string): Promise<UserDocument> => {
-  const foundUser = await User.findById(userId)
-
-  if (!foundUser) {
-    throw new NotFoundError(`Movie ${userId} not found`)
-  }
-
-  return foundUser
-}
-
-const findAll = async (): Promise<UserDocument[]> => {
-  return User.find()
+async function create(payload: Partial<UserDocument>): Promise<UserDocument> {
+  const newUser = new User({ ...payload })
+  return newUser.save()
 }
 
 const update = async (
-  userId: string,
+  email: string,
   update: Partial<UserDocument>
 ): Promise<UserDocument | null> => {
+  const userId = await User.findOne({ email })
   const foundUser = await User.findByIdAndUpdate(userId, update, {
     new: true,
   })
@@ -33,45 +21,12 @@ const update = async (
 
   return foundUser
 }
-
-const deleteUser = async (userId: string): Promise<UserDocument | null> => {
-  const foundUser = User.findByIdAndDelete(userId)
-
-  if (!foundUser) {
-    throw new NotFoundError(`User ${userId} not found`)
-  }
-
-  return foundUser
-}
-
-type Profile = {
-  email: string
-  given_name: string
-  family_name: string
-}
-
-const findOneOrCreate = async (userProfile: Profile): Promise<UserDocument> => {
-  const { email, given_name, family_name } = userProfile
-  const foundUser = await User.findOne({ email: email })
-
-  if (!foundUser) {
-    const newUser = new User({
-      email,
-      given_name,
-      family_name,
-    })
-    const createdUser = await newUser.save()
-    return createdUser
-  } else {
-    return foundUser
-  }
+async function findAllUsers(): Promise<UserDocument[]> {
+  return User.find()
 }
 
 export default {
   create,
-  findUserById,
-  findAll,
   update,
-  deleteUser,
-  findOneOrCreate,
+  findAllUsers,
 }
